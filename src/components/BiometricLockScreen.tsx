@@ -57,10 +57,17 @@ export const BiometricLockScreen: React.FC<BiometricLockScreenProps> = ({ config
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#F7F8FA] p-4">
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 text-amber-400">
-            <Lock className="h-5 w-5" />
+          <div className="inline-flex items-center justify-center rounded-xl bg-black px-4 py-2.5 shadow-xs">
+            <img
+              src="/workshop-logo.png"
+              alt="JaksGarage"
+              className="h-10 w-auto max-w-[180px] object-contain"
+            />
           </div>
-          <h1 className="mt-4 text-xl font-bold text-slate-900">JaksGarage Terkunci</h1>
+          <h1 className="mt-4 flex items-center gap-1.5 text-lg font-bold text-slate-900">
+            <Lock className="h-4 w-4 text-amber-600" />
+            JaksGarage Terkunci
+          </h1>
           <p className="mt-1 text-xs text-slate-500">
             Autentikasi lokal untuk membuka catatan transaksi dan nota pembayaran.
           </p>

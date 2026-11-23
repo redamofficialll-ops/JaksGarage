@@ -12,7 +12,7 @@ export default defineConfig(() => {
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: [
-          'icon.svg',
+          'favicon.png',
           'apple-touch-icon.png',
           'pwa-192x192.png',
           'pwa-512x512.png',
@@ -24,9 +24,10 @@ export default defineConfig(() => {
           name: 'JaksGarage — Nota Pembayaran',
           short_name: 'JaksGarage',
           description: 'Aplikasi nota pembayaran, riwayat transaksi, dan dashboard penjualan JaksGarage dengan dukungan offline.',
-          theme_color: '#0F172A',
-          background_color: '#F7F8FA',
+          theme_color: '#000000',
+          background_color: '#000000',
           display: 'standalone',
+          orientation: 'portrait-primary',
           start_url: '/',
           scope: '/',
           icons: [

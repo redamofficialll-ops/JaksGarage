@@ -195,8 +195,15 @@ export default function App() {
 
   if (loadingInitial) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F7F8FA]">
-        <p className="text-sm font-medium text-slate-600">Memuat data lokal JaksGarage...</p>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-black px-6 text-center">
+        <img
+          src="/workshop-logo.png"
+          alt="JaksGarage"
+          className="h-24 w-auto max-w-[260px] object-contain"
+        />
+        <p className="mt-4 text-xs font-medium tracking-wide text-slate-400">
+          Memuat JaksGarage...
+        </p>
       </div>
     );
   }
@@ -228,13 +235,15 @@ export default function App() {
           <button
             type="button"
             onClick={() => setActiveView('builder')}
-            className="flex items-center gap-1.5 text-slate-900 whitespace-nowrap shrink-0 sm:gap-2.5"
+            className="flex items-center gap-2 text-slate-900 whitespace-nowrap shrink-0 sm:gap-2.5"
           >
-            <img
-              src="/workshop-logo.png"
-              alt="Jaks Garage"
-              className="h-6 w-auto max-w-[96px] rounded object-contain sm:h-8 sm:max-w-[140px]"
-            />
+            <span className="inline-flex items-center justify-center rounded-md bg-black px-1.5 py-0.5">
+              <img
+                src="/workshop-logo.png"
+                alt="Jaks Garage"
+                className="h-6 w-auto max-w-[96px] object-contain sm:h-7 sm:max-w-[130px]"
+              />
+            </span>
             <span className="font-display text-[15px] font-bold tracking-tight sm:text-lg">
               JaksGarage
             </span>
