@@ -11,7 +11,14 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png', 'workshop-logo.png'],
+        includeAssets: [
+          'icon.svg',
+          'apple-touch-icon.png',
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'pwa-maskable-512x512.png',
+          'workshop-logo.png',
+        ],
         manifest: {
           id: '/',
           name: 'JaksGarage — Nota Pembayaran',
@@ -45,6 +52,10 @@ export default defineConfig(() => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          globIgnores: ['assets/aistudio/**'],
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          navigateFallback: '/index.html',
+          navigateFallbackDenylist: [/^\/assets\//],
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
