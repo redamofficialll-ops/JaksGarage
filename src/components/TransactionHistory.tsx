@@ -14,7 +14,7 @@ import { PaymentStatus, Transaction, WorkshopProfile } from '../types';
 import {
   buildWhatsAppMessage,
   exportTransactionsCSV,
-  formatDateTimeID,
+  formatDateID,
   formatIDR,
   formatMonthLabel,
   getMonthKey,
@@ -243,7 +243,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
                           {tx.invoiceNumber}
                         </p>
                         <p className="font-mono-tabular mt-0.5 text-xs text-slate-500">
-                          {formatDateTimeID(tx.createdAt)}
+                          {formatDateID(tx.createdAt)}
                         </p>
                       </td>
 
@@ -375,7 +375,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
                       </div>
                     </div>
                     <p className="mt-1 truncate text-xs text-slate-500">
-                      {formatDateTimeID(tx.createdAt)} · {tx.items.length} item · {tx.paymentMethod}
+                      {formatDateID(tx.createdAt)} · {tx.items.length} item · {tx.paymentMethod}
                     </p>
                   </button>
 

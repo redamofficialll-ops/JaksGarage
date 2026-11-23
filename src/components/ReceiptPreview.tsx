@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transaction, WorkshopProfile } from '../types';
-import { formatDateTimeID, formatIDR } from '../utils/format';
+import { formatDateID, formatIDR } from '../utils/format';
 
 interface ReceiptPreviewProps {
   transaction: Transaction;
@@ -64,7 +64,7 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
           </div>
           <div className="shrink-0 sm:text-right">
             <p className="font-mono-tabular text-slate-800">
-              {formatDateTimeID(transaction.createdAt)}
+              {formatDateID(transaction.createdAt)}
             </p>
             <p className="mt-0.5">Metode: {transaction.paymentMethod}</p>
           </div>

@@ -123,7 +123,7 @@ export function buildWhatsAppMessage(tx: Transaction, profile: WorkshopProfile):
     profile.address ? `${profile.address}` : '',
     `--------------------------------`,
     `No. Nota : *${tx.invoiceNumber}*`,
-    `Tanggal  : ${formatDateTimeID(tx.createdAt)}`,
+    `Tanggal  : ${formatDateID(tx.createdAt)}`,
     `Pelanggan: ${tx.customerName || 'Pelanggan Umum'}`,
     tx.vehicleInfo ? `Kendaraan: ${tx.vehicleInfo}` : '',
     `--------------------------------`,

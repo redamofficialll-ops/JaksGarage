@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { Transaction, WorkshopProfile } from '../types';
-import { formatDateTimeID, formatIDR, formatMonthLabel } from './format';
+import { formatDateID, formatDateTimeID, formatIDR, formatMonthLabel } from './format';
 
 export interface MonthlyDashboardExportData {
   monthKey: string;
@@ -171,7 +171,7 @@ export async function buildReceiptPDF(
 
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Tanggal: ${formatDateTimeID(tx.createdAt)}`, pageWidth - margin, y, { align: 'right' });
+  doc.text(`Tanggal: ${formatDateID(tx.createdAt)}`, pageWidth - margin, y, { align: 'right' });
   doc.text(`Metode: ${tx.paymentMethod}`, pageWidth - margin, y + 4.5, { align: 'right' });
 
   const leftBottomY = profile.phone ? phoneY + 4.5 : phoneY + 1;
@@ -581,7 +581,7 @@ export async function exportMonthlyDashboardPDF(
 
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(71, 85, 105);
-      doc.text(formatDateTimeID(tx.createdAt), margin + 36, y + 4.8);
+      doc.text(formatDateID(tx.createdAt), margin + 36, y + 4.8);
 
       doc.setTextColor(15, 23, 42);
       const cust = doc.splitTextToSize(tx.customerName || 'Pelanggan Umum', 46)[0] || 'Pelanggan Umum';

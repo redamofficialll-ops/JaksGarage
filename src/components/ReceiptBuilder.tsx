@@ -48,6 +48,14 @@ function createEmptyItem(category: ItemCategory = 'Jasa'): LineItem {
   };
 }
 
+function toLocalDateInputValue(input?: string | Date): string {
+  const d = input ? new Date(input) : new Date();
+  const safe = Number.isNaN(d.getTime()) ? new Date() : d;
+  return `${safe.getFullYear()}-${String(safe.getMonth() + 1).padStart(2, '0')}-${String(
+    safe.getDate()
+  ).padStart(2, '0')}`;
+}
+
 export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
   existingTransactions,
   editingTransaction,
@@ -59,7 +67,7 @@ export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
   const [invoiceNumber, setInvoiceNumber] = useState(() =>
     generateInvoiceNumber(existingTransactions)
   );
-  const [createdAt, setCreatedAt] = useState(() => new Date().toISOString().slice(0, 16));
+  const [createdAt, setCreatedAt] = useState(() => toLocalDateInputValue());
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [vehicleInfo, setVehicleInfo] = useState('');
@@ -81,7 +89,7 @@ export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
   useEffect(() => {
     if (editingTransaction) {
       setInvoiceNumber(editingTransaction.invoiceNumber);
-      setCreatedAt(new Date(editingTransaction.createdAt).toISOString().slice(0, 16));
+      setCreatedAt(toLocalDateInputValue(editingTransaction.createdAt));
       setCustomerName(editingTransaction.customerName);
       setCustomerPhone(editingTransaction.customerPhone);
       setVehicleInfo(editingTransaction.vehicleInfo);
@@ -118,7 +126,9 @@ export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
     () => ({
       id: editingTransaction?.id || `tx-${Date.now()}`,
       invoiceNumber: invoiceNumber.trim() || generateInvoiceNumber(existingTransactions),
-      createdAt: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
+      createdAt: createdAt
+        ? new Date(`${createdAt}T12:00:00`).toISOString()
+        : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
@@ -185,7 +195,7 @@ export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
   const resetForm = () => {
     onCancelEdit();
     setInvoiceNumber(generateInvoiceNumber(existingTransactions));
-    setCreatedAt(new Date().toISOString().slice(0, 16));
+    setCreatedAt(toLocalDateInputValue());
     setCustomerName('');
     setCustomerPhone('');
     setVehicleInfo('');
@@ -358,9 +368,9 @@ export const ReceiptBuilder: React.FC<ReceiptBuilderProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700">Tanggal & Jam</label>
+                <label className="block text-xs font-medium text-slate-700">Tanggal</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   value={createdAt}
                   onChange={(e) => setCreatedAt(e.target.value)}
                   className="font-mono-tabular mt-1.5 min-h-[44px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-amber-600 focus:outline-none"
