@@ -55,12 +55,4 @@ export interface AppNotification {
   read: boolean;
 }
 
-export interface BiometricConfig {
-  enabled: boolean;
-  credentialId?: string;
-  pinHash?: string;
-  deviceLabel?: string;
-  updatedAt?: string;
-}
-
 export type AppView = 'builder' | 'history' | 'dashboard' | 'settings';

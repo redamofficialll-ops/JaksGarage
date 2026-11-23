@@ -1,6 +1,6 @@
 {
   "name": "JaksGarage",
-  "description": "Nota pembayaran profesional, riwayat transaksi terstruktur, dashboard penjualan bulanan dengan ekspor PDF & Excel, mode offline PWA, kunci biometrik lokal, WhatsApp, dan ekspor CSV.",
+  "description": "Nota pembayaran profesional, riwayat transaksi terstruktur, dashboard penjualan bulanan dengan ekspor PDF & Excel, mode offline PWA, WhatsApp, dan ekspor CSV.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

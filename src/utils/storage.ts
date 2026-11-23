@@ -1,6 +1,5 @@
 import {
   AppNotification,
-  BiometricConfig,
   Transaction,
   WorkshopProfile,
 } from '../types';
@@ -164,12 +163,4 @@ export async function getNotifications(): Promise<AppNotification[]> {
 
 export async function saveNotifications(items: AppNotification[]): Promise<void> {
   await kvSet('notifications', items.slice(0, 60));
-}
-
-export async function getBiometricConfig(): Promise<BiometricConfig> {
-  return kvGet<BiometricConfig>('biometric_config', { enabled: false });
-}
-
-export async function saveBiometricConfig(config: BiometricConfig): Promise<void> {
-  await kvSet('biometric_config', config);
 }

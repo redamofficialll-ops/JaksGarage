@@ -5,13 +5,11 @@ import {
   CheckCircle2,
   FilePlus2,
   History,
-  Lock,
   Plus,
   Settings,
   ShieldCheck,
   X,
 } from 'lucide-react';
-import { BiometricLockScreen } from './components/BiometricLockScreen';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { MonthlyDashboard } from './components/MonthlyDashboard';
 import { NotificationCenter } from './components/NotificationCenter';
@@ -23,7 +21,6 @@ import { TransactionHistory } from './components/TransactionHistory';
 import {
   AppNotification,
   AppView,
-  BiometricConfig,
   Transaction,
   WorkshopProfile,
 } from './types';
@@ -36,10 +33,8 @@ import { loadWorkshopLogoForPDF } from './utils/pdfGenerator';
 import {
   deleteTransactionLocal,
   getAllTransactions,
-  getBiometricConfig,
   getNotifications,
   getWorkshopProfile,
-  saveBiometricConfig,
   saveNotifications,
   saveTransactionLocal,
   saveWorkshopProfile,
@@ -77,8 +72,6 @@ export default function App() {
   });
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
-  const [biometricConfig, setBiometricConfig] = useState<BiometricConfig>({ enabled: false });
-  const [isLocked, setIsLocked] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
 
   const [confirmState, setConfirmState] = useState<ConfirmState>({
@@ -112,16 +105,11 @@ export default function App() {
       getAllTransactions(),
       getWorkshopProfile(),
       getNotifications(),
-      getBiometricConfig(),
-    ]).then(([txList, loadedProfile, notifs, bio]) => {
+    ]).then(([txList, loadedProfile, notifs]) => {
       if (!active) return;
       setTransactions(txList);
       setProfile(loadedProfile);
       setNotifications(notifs);
-      setBiometricConfig(bio);
-      if (bio.enabled && (bio.credentialId || bio.pinHash)) {
-        setIsLocked(true);
-      }
       setLoadingInitial(false);
     });
     return () => {
@@ -208,15 +196,6 @@ export default function App() {
     );
   }
 
-  if (isLocked && biometricConfig.enabled) {
-    return (
-      <BiometricLockScreen
-        config={biometricConfig}
-        onUnlock={() => setIsLocked(false)}
-      />
-    );
-  }
-
   const navItems: { id: AppView; label: string; icon: typeof FilePlus2 }[] = [
     { id: 'builder', label: 'Buat Nota', icon: FilePlus2 },
     { id: 'history', label: 'Riwayat', icon: History },
@@ -225,7 +204,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] pb-20 text-slate-900 md:pb-10">
+    <div className="min-h-screen bg-[#F7F8FA] pb-10 text-slate-900">
       <OfflineIndicator />
 
       {/* Top Bar Contract: Brand | Nav | Actions */}
@@ -273,20 +252,8 @@ export default function App() {
             })}
           </nav>
 
-          {/* Zone 3: Quick Actions (Lock, Notifications, New Receipt CTA) */}
+          {/* Zone 3: Quick Actions (Notifications, New Receipt CTA) */}
           <div className="flex items-center gap-1.5 shrink-0 sm:gap-2">
-            {biometricConfig.enabled && (
-              <button
-                type="button"
-                onClick={() => setIsLocked(true)}
-                title="Kunci Aplikasi"
-                aria-label="Kunci aplikasi"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 shrink-0 sm:h-10 sm:w-10"
-              >
-                <Lock className="h-4 w-4 text-amber-600" />
-              </button>
-            )}
-
             <button
               type="button"
               onClick={() => setNotifOpen(true)}
@@ -316,6 +283,34 @@ export default function App() {
             </button>
           </div>
         </div>
+
+        {/* Mobile Top Navigation Bar */}
+        <nav
+          aria-label="Navigasi seluler"
+          className="border-t border-slate-100 bg-white md:hidden"
+        >
+          <div className="grid grid-cols-4 items-stretch">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const active = activeView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setActiveView(item.id)}
+                  className={`flex min-h-[52px] flex-col items-center justify-center gap-0.5 border-b-2 px-1 py-1.5 text-[11px] font-medium transition-colors ${
+                    active
+                      ? 'border-amber-600 text-amber-700 font-semibold'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
       </header>
 
       {/* Main Content Container */}
@@ -358,16 +353,10 @@ export default function App() {
           <SettingsAndSync
             profile={profile}
             transactions={transactions}
-            biometricConfig={biometricConfig}
             onSaveProfile={async (next) => {
               await saveWorkshopProfile(next);
               setProfile(next);
             }}
-            onUpdateBiometric={async (next) => {
-              await saveBiometricConfig(next);
-              setBiometricConfig(next);
-            }}
-            onLockNow={() => setIsLocked(true)}
             onStatusMessage={showToast}
           />
         )}
@@ -384,38 +373,12 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Mobile Bottom Navigation Bar (Thumb Zone) */}
-      <nav
-        aria-label="Navigasi seluler"
-        className="no-print fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-md md:hidden pb-safe"
-      >
-        <div className="grid h-16 grid-cols-4 items-center">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = activeView === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveView(item.id)}
-                className={`flex min-h-[48px] flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors ${
-                  active ? 'text-amber-700 font-semibold' : 'text-slate-500'
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
       {/* Real-time Toast Feedback */}
       {toast && (
         <div
           role="status"
           aria-live="polite"
-          className="no-print fixed bottom-20 right-4 z-50 flex max-w-sm items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-900 px-4 py-3 text-xs font-medium text-white shadow-lg md:bottom-6"
+          className="no-print fixed bottom-5 right-4 z-50 flex max-w-sm items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-900 px-4 py-3 text-xs font-medium text-white shadow-lg"
         >
           <CheckCircle2
             className={`mt-0.5 h-4 w-4 shrink-0 ${
